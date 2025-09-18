@@ -1,3 +1,26 @@
+# How to make it work locally
+
+## Initial setup
+
+1. Go to https://api.imgbb.com/ and create a free account to grab your API key
+2. Go to the `.env.example` and add your API key next to `VITE_IMGBB_API_KEY=`. Do the same in `.env.production`
+3. Copy the `.env.example` file to `.env` in the root directory
+4. `yarn install`
+5. `cd figma-plugin-clapy && yarn build:prod`
+6. Open Figma, add plugin, from manifest and select `D:\EDM115\Documents\Projects\clapy-plugin\figma-plugin-clapy\dist\manifest.json`
+
+## Repeated usage
+
+1. `yarn dup`
+2. `cd figma-plugin-clapy && yarn nodemon --inspect=0.0.0.0:9230 --watch src/core/dev-preview-mode/preview-server.js src/core/dev-preview-mode/preview-server.js`
+3. `cd backend-clapy && yarn dev` (wait for `Serving the app at http://localhost:4141`)
+4. Open figma, plugins, Clapy beta
+5. Select a component, Generate code
+6. Save the json somewhere
+7. In a pwsh where the json is, `curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "X-Requested-By: clapy" --data-binary "@export.json" http://localhost:4141/code/export --output code-export.zip` (the plugin needs to still be open in figma)
+8. Extract the obtained zip, `yarn install`, `yarn build`, `yarn start` to see the result
+   (or if you prefer to use pnpm, `pnpm i`, `pnpm approve-builds` (validate for esbuild), `pnpm build`, `pnpm start`)
+
 # Important notice
 
 Clapy has stopped operating. We are thankful for your support. After years of generating projects code from design, it's time to move forward.

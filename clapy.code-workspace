@@ -11,10 +11,6 @@
     {
       "name": "figma-plugin-clapy",
       "path": "figma-plugin-clapy"
-    },
-    {
-      "name": "local-gen-clapy",
-      "path": "../local-gen-clapy"
     }
   ],
   "settings": {
@@ -61,33 +57,26 @@
     },
     "eslint.format.enable": true,
     "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.formatOnSave": true
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[jsonc]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.formatOnSave": true
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[css]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.formatOnSave": true
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[scss]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.formatOnSave": true
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[markdown]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.formatOnSave": true
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     // For HTML, we don't use prettier because the embedded JS is wrongly formatted.
     "[html]": {
-      "editor.defaultFormatter": "vscode.html-language-features",
-      "editor.formatOnSave": true
+      "editor.defaultFormatter": "vscode.html-language-features"
     },
     "[handlebars]": {
-      "editor.defaultFormatter": "vscode.html-language-features",
-      "editor.formatOnSave": true
+      "editor.defaultFormatter": "vscode.html-language-features"
     },
     "[javascript]": {
       "editor.defaultFormatter": "dbaeumer.vscode-eslint"
@@ -108,7 +97,8 @@
     "less.format.spaceAroundSelectorSeparator": true,
     "scss.format.spaceAroundSelectorSeparator": true,
     "javascript.updateImportsOnFileMove.enabled": "always",
-    "typescript.updateImportsOnFileMove.enabled": "always"
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "vsicons.presets.nestjs": true
     // "[html]": {
     //   "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     // },

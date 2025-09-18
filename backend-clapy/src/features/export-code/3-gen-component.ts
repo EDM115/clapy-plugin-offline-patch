@@ -92,7 +92,7 @@ function ensureComponentIsImported(parentModuleContext: ModuleContext, moduleCon
 
   if (callerImports[compName]) return;
 
-  let moduleSpecifier = `${relative(callerCompDir, compDir)}/${compName}`;
+  let moduleSpecifier = `${relative(callerCompDir, compDir)}/${compName}`.replaceAll('\\', '/');
   if (moduleSpecifier.startsWith('/')) {
     moduleSpecifier = `.${moduleSpecifier}`;
   } else if (!moduleSpecifier.startsWith('.')) {

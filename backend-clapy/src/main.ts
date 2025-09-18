@@ -25,7 +25,7 @@ async function bootstrap() {
   });
 
   // CORS
-  app.enableCors();
+  // app.enableCors();
   // Safer variant:
   // if env.allowedHosts is not provided, no cors (no cross-domain). If provided, those specified
   // hosts only are allowed.
@@ -38,15 +38,15 @@ async function bootstrap() {
   // }
 
   // Security: various middleware (https://docs.nestjs.com/techniques/security)
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          'script-src': ["'self'", "'unsafe-inline'"],
-        },
-      },
-    }),
-  );
+  // app.use(
+  //   helmet({
+  //     contentSecurityPolicy: {
+  //       directives: {
+  //         'script-src': ["'self'", "'unsafe-inline'"],
+  //       },
+  //     },
+  //   }),
+  // );
   // Security: add rate limit
   app.use(
     rateLimit({

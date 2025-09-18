@@ -231,13 +231,32 @@ export const FigmaToCodeHomeInner: FC<Props> = memo(function FigmaToCodeHomeInne
 
           setProgress({ stepId: 'generateCode', stepNumber: 8 });
 
-          const { data } = await fetchApiMethod<GenCodeResponse>('code/export', nodes);
-          if (!data.quotas) {
+          let data: GenCodeResponse | undefined;
+          try {
+            const resp = await fetchApiMethod<GenCodeResponse>('code/export', nodes);
+            data = resp?.data as GenCodeResponse;
+          } catch (error: any) {
+            const msg = String(error?.message || '');
+            const isNetwork =
+              msg.includes('not reachable') || msg.includes('Failed to fetch') || msg.includes('service is down');
+            if (isNetwork) {
+              // Offline fallback: download the payload as a JSON file
+              const blob = new Blob([JSON.stringify(nodes, null, 2)], { type: 'application/json' });
+              downloadFile(blob as unknown as Blob, 'export.json');
+              const durationInS = getDuration(timer, performance.now());
+              track('gen-code', 'completed-offline', { durationInS, offline: true });
+              return;
+            }
+            throw error;
+          }
+          /* if (!data.quotas && false) {
             const { data } = await apiGet<UserMetadata>('stripe/get-user-quota');
             dispatch(setStripeData(data));
           } else {
             dispatch(setStripeData(data));
-          }
+          } */
+
+          downloadFile(data as unknown as Blob, 'Code export.zip');
 
           perfMeasure(`Code generated and ${data?.sandbox_id ? 'uploaded to CSB' : 'downloaded'} in`);
           const durationInS = getDuration(timer, performance.now());
@@ -326,25 +345,21 @@ export const FigmaToCodeHomeInner: FC<Props> = memo(function FigmaToCodeHomeInne
           </Accordion>
         </>
       )}
-      {typeof picture === 'undefined' ? (
-        <Loading />
-      ) : (
-        <Button
-          onClick={generateCode}
-          disabled={state === 'loading' || state === 'noselection' || isQuotaReached || !isCodeGenReady}
-          loading={isLoading}
-          className={state === 'generated' ? classes.hide : undefined}
-        >
-          {isQuotaReached ? (
-            <>
-              <LockIcon />
-              &nbsp;&nbsp; <span> Generate code</span>
-            </>
-          ) : (
-            <>&lt; Generate code &gt;</>
-          )}
-        </Button>
-      )}
+      <Button
+        onClick={generateCode}
+        disabled={state === 'loading' || state === 'noselection' || isQuotaReached || !isCodeGenReady}
+        loading={isLoading}
+        className={state === 'generated' ? classes.hide : undefined}
+      >
+        {isQuotaReached ? (
+          <>
+            <LockIcon />
+            &nbsp;&nbsp; <span> Generate code</span>
+          </>
+        ) : (
+          <>&lt; Generate code &gt;</>
+        )}
+      </Button>
       {isQuotaReached && state !== 'generated' ? (
         <div className={classes.fullQuotaTextContainer}>
           You have used up all your monthly credits.

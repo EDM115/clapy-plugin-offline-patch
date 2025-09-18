@@ -26,7 +26,7 @@ const staging = {
 };
 
 const prod = {
-  apiBaseUrl: 'https://clapy-backend-loitgf2s5q-ew.a.run.app',
+  apiBaseUrl: 'https://localhost:4141',
   githubOAuthAppUrl: 'https://github.com/settings/connections/applications/517bbefccc493f4e427c',
 };
 
@@ -45,6 +45,8 @@ const portFragment =
 const hasuraAfterProtocol = `://${process.env.VITE_HASURA_HOSTNAME}${portFragment}`;
 const hasuraHttp = `${isSsl ? 'https' : 'http'}${hasuraAfterProtocol}`;
 const hasuraWs = `${isSsl ? 'wss' : 'ws'}${hasuraAfterProtocol}`;
+
+const imgbbApiKey = process.env.VITE_IMGBB_API_KEY || '';
 
 export const env = {
   ...nonConfidentialEnv,
@@ -67,6 +69,7 @@ export const env = {
   hasuraGraphQL: `${hasuraHttp}/v1/graphql`,
   hasuraGraphQLWS: `${hasuraWs}/v1/graphql`,
   hasuraRest: `${hasuraHttp}/api/rest`,
+  imgbbApiKey,
 };
 
 if (!isProd) {

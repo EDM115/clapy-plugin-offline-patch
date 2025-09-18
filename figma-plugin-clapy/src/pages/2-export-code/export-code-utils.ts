@@ -26,7 +26,7 @@ export function getDefaultUserSettings() {
 
   const defaultUserSettings: UserSettingsWithRequired = {
     framework: 'react',
-    target: isNoCodeSandboxUser ? UserSettingsTarget.zip : UserSettingsTarget.csb,
+    target: UserSettingsTarget.zip,
     angularPrefix: 'cl',
     componentsDir: componentsDirPerFramework.react,
   };

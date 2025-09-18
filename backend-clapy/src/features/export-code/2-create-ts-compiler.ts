@@ -43,15 +43,17 @@ function getCSSVariablesFileName(cssExt: string) {
 
 const enableMUIInDev = false;
 
-export async function exportCode(
-  { root, components, svgs, images, styles, extraConfig, tokens, page, githubAccessToken }: ExportCodePayload,
-  uploadToCsb = true,
-  user: AccessTokenDecoded,
-) {
-  if (env.localPreviewInsteadOfCsb) {
-    uploadToCsb = false;
-  }
-
+export async function exportCode({
+  root,
+  components,
+  svgs,
+  images,
+  styles,
+  extraConfig,
+  tokens,
+  page,
+  githubAccessToken,
+}: ExportCodePayload) {
   // Legacy zip setting
   if (!extraConfig.target) {
     extraConfig.target = extraConfig.zip ? UserSettingsTarget.zip : UserSettingsTarget.csb;
@@ -59,10 +61,7 @@ export async function exportCode(
   // /Legacy
 
   extraConfig.useZipProjectTemplate = env.localPreviewInsteadOfCsb || extraConfig.target !== UserSettingsTarget.csb;
-  const fwConnector = frameworkConnectors[extraConfig.framework || 'react'];
-  if (extraConfig.framework === 'angular' && !extraConfig.angularPrefix) {
-    extraConfig.angularPrefix = 'cl';
-  }
+  const fwConnector = frameworkConnectors['react'];
 
   const parent = (root as any)?.parent as ParentNode | Nil;
   const instancesInComp: InstanceNode2[] = [];
@@ -198,7 +197,9 @@ export async function exportCode(
     //
     // console.log(project.getSourceFile('/src/App.tsx')?.getFullText());
     perfMeasure('k');
-    await writeToDisk(csbFiles, (root as SceneNode2).componentContext!, extraConfig.isClapyFile); // Takes time with many files
+    // await writeToDisk(csbFiles, (root as SceneNode2).componentContext!, extraConfig.isClapyFile); // Takes time with many files
+    const zipResponse = await makeZip(csbFiles);
+    return new StreamableFile(zipResponse as Readable);
     perfMeasure('l');
   }
   if (Object.keys(csbFiles).length > 500) {
@@ -207,21 +208,21 @@ export async function exportCode(
       400,
     );
   }
-  if (!env.isDev || uploadToCsb || extraConfig.target !== UserSettingsTarget.csb) {
-    const isNoCodesandboxUser = hasRoleNoCodeSandbox(user);
-    if (extraConfig.target === UserSettingsTarget.zip) {
-      const zipResponse = await makeZip(csbFiles);
-      return new StreamableFile(zipResponse as Readable);
-    } else if (extraConfig.target === UserSettingsTarget.github) {
-      return sendCodeToGithub(projectContext, githubAccessToken, user, csbFiles);
-    } else {
-      if (isNoCodesandboxUser) {
-        throw new Error("You don't have the permission to upload the generated code to CodeSandbox.");
-      }
-      const csbResponse = await uploadToCSB(csbFiles);
-      return csbResponse;
-    }
-  }
+  // if (!env.isDev || uploadToCsb || extraConfig.target !== UserSettingsTarget.csb) {
+  //   const isNoCodesandboxUser = hasRoleNoCodeSandbox(user);
+  //   if (extraConfig.target === UserSettingsTarget.zip) {
+  //     const zipResponse = await makeZip(csbFiles);
+  //     return new StreamableFile(zipResponse as Readable);
+  //   } else if (extraConfig.target === UserSettingsTarget.github) {
+  //     return sendCodeToGithub(projectContext, githubAccessToken, user, csbFiles);
+  //   } else {
+  //     if (isNoCodesandboxUser) {
+  //       throw new Error("You don't have the permission to upload the generated code to CodeSandbox.");
+  //     }
+  //     const csbResponse = await uploadToCSB(csbFiles);
+  //     return csbResponse;
+  //   }
+  // }
   return { sandbox_id: 'false' } as CSBResponse;
 }
 

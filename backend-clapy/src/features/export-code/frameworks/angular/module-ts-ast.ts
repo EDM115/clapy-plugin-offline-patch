@@ -14,7 +14,7 @@ export function getModuleTsAst(appModuleContext: ModuleContext) {
   // const ext = projectContext.extraConfig.useZipProjectTemplate ? '.js' : '';
   const ext = '';
   for (const { compDir, baseCompName, compName } of projectContext.components.values()) {
-    let moduleSpecifier = `${relative(appDir, compDir)}/${baseCompName}.component${ext}`;
+    let moduleSpecifier = `${relative(appDir, compDir)}/${baseCompName}.component${ext}`.replaceAll('\\', '/');
     if (!moduleSpecifier.startsWith('.')) moduleSpecifier = `./${moduleSpecifier}`;
     imports.push(
       factory.createImportDeclaration(

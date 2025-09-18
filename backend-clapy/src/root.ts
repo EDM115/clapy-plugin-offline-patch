@@ -1,16 +1,17 @@
-import { URL } from 'url';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
 
-// https://stackoverflow.com/a/66651120/4053349
-let __dirname = new URL('.', import.meta.url).pathname;
-if (__dirname.endsWith('/')) {
-  __dirname = __dirname.slice(0, -1);
-}
+// Robust path resolution across platforms (Windows/Linux/Mac)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export const srcDir = __dirname;
-export const backendDir = `${__dirname}/..`;
-export const rootDir = `${backendDir}/..`;
-export const localGenClapyDir = `${rootDir}/../local-gen-clapy`;
-export const pluginDir = `${rootDir}/figma-plugin-clapy`;
+export const backendDir = resolve(__dirname, '..');
+export const rootDir = resolve(backendDir, '..');
+// local-gen-clapy is a sibling of the monorepo folder (local-gen-clapy from rootDir)
+export const localGenClapyDir = resolve(rootDir, /* '..',*/ 'local-gen-clapy');
+export const pluginDir = resolve(rootDir, 'figma-plugin-clapy');
+// Container mount path for plugin components (keep posix style for Docker target)
 export const dockerPluginCompDir = `/plugin/components`;
 
-export const exportTemplatesDir = `${backendDir}/export-templates`;
+export const exportTemplatesDir = resolve(backendDir, 'export-templates');

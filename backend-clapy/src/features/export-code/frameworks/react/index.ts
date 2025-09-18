@@ -461,7 +461,7 @@ function addCssResetsModuleImport(moduleContext: ModuleContext) {
   const cssResetsFilePath = getResetsCssModulePath(projectContext);
 
   // builds the relative path between the current component and the imported CSS file.
-  let cssResetsModuleSpecifier = relative(compDir, cssResetsFilePath);
+  let cssResetsModuleSpecifier = relative(compDir, cssResetsFilePath).replaceAll('\\', '/');
   if (!cssResetsModuleSpecifier.startsWith('.')) {
     cssResetsModuleSpecifier = `./${cssResetsModuleSpecifier}`;
   }
